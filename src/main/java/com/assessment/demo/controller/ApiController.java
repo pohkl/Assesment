@@ -1,7 +1,8 @@
-package com.sample.assessment.controller;
+package com.assessment.demo.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -9,15 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiController {
 
     @GetMapping("/hello")
-    public String sayHello() {
+    public String sayHello(@RequestParam("pram") String itemid) {
+    	
+    	System.out.println(itemid);
+    	
         return "Hello, World!";
     }
-
-    // Get Currency by POST
-    @PostMapping("/currency")
-    public String getCurrency(@RequestParam String currencyCode) {
-        // Logic to fetch and return currency details
-        return "Currency: " + currencyCode;
     
-    }
 }
