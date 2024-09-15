@@ -1,3 +1,4 @@
+
 call gradlew.bat clean build
 
-java -jar "C:\Editors\Code\github\Assesment\build\libs\demo-0.0.1-SNAPSHOT.jar"
+call "C:\Program Files\Java\jdk-17.0.12\bin\java.exe" -jar ".\build\libs\demo-0.0.1-SNAPSHOT.jar"

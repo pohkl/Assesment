@@ -3,6 +3,8 @@ package com.assessment.demo.filter;
 import java.io.IOException;
 import java.util.Enumeration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -17,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class RequestLoggingFilter implements Filter {
 
-
+	private static final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -50,23 +52,23 @@ public class RequestLoggingFilter implements Filter {
     private void logRequest(ContentCachingRequestWrapper request) throws IOException {
     	
         String requestBody = new String(request.getContentAsByteArray(), request.getCharacterEncoding());
-        System.out.println("Request URL: " + request.getRequestURL());
-        System.out.println("Request Method: " + request.getMethod());
-        System.out.println("Request Headers : ");
+        logger.info("Request URL: " + request.getRequestURL());
+        logger.info("Request Method: " + request.getMethod());
+        logger.info("Request Headers : ");
         for (Enumeration<?> e = request.getHeaderNames(); e.hasMoreElements();) {
             String nextHeaderName = (String) e.nextElement();
             String headerValue = request.getHeader(nextHeaderName);
 
-            System.out.println("	" + nextHeaderName +" : "+headerValue);
+            logger.info("	" + nextHeaderName +" : "+headerValue);
         }
-        System.out.println("Request Query : " + request.getQueryString());
-        System.out.println("Request Body: " + requestBody);
+        logger.info("Request Query : " + request.getQueryString());
+        logger.info("Request Body: " + requestBody);
     }
 
     private void logResponse(ContentCachingResponseWrapper response) throws IOException {
         String responseBody = new String(response.getContentAsByteArray(), response.getCharacterEncoding());
-        System.out.println("Response Body: " + responseBody);
-        System.out.println("");
+        logger.info("Response Body: " + responseBody);
+        logger.info("--------------------------------------------");
     }
 
 	
