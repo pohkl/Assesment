@@ -74,7 +74,15 @@ public class UserProfileService {
 		
 		userProfileRepository.save(e);
 		
+		if(!isGenderIdExists(e.getGenderId())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Gender ID.");
+		}
+		
 		return e;
+	}
+
+	private boolean isGenderIdExists(Integer genderId) {		
+		return genderRepo.existsById(genderId);
 	}
 
 	public void deleteUserProfileById(int profileId) {
