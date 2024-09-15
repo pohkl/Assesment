@@ -1,5 +1,6 @@
 package com.assessment.demo.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -92,10 +93,14 @@ public class UserProfileService {
 	public ListUserProfileResponseBean listUserProfile(ListUserProfileRequestBean requestBean) {
 		
 		Sort sort = null;
+		
+		// Check that the provided field name exists, default is profileId
+		String sortBy = checkSortByValue(requestBean.getSortBy());
+		
 		if(Sort.Direction.ASC.name().equalsIgnoreCase(requestBean.getSortDir())) {
-			sort = Sort.by(requestBean.getSortBy()).ascending();
+			sort = Sort.by(sortBy).ascending();
 		} else {
-			sort = Sort.by(requestBean.getSortBy()).descending();
+			sort = Sort.by(sortBy).descending();
 		}
 		
         Pageable pageable = PageRequest.of(requestBean.getPage()-1, requestBean.getPageSize(), sort);
@@ -108,7 +113,7 @@ public class UserProfileService {
         
 		return response;
 	}
-	
+
 	public UserProfileEntity insertRandomUserProfile() {
 
 		// Call third party API to get random user profile
@@ -136,5 +141,21 @@ public class UserProfileService {
 	private Integer getGenderIdByName(String gender) {
 		return genderRepo.findIdByGenderName(gender);
 	}
+	
+	private String checkSortByValue(String sortBy) {
+		if(doesFieldExist(UserProfileEntity.class, sortBy)) {
+			return sortBy;
+		}
+		return "profileId";
+	}
+	
+	public static boolean doesFieldExist(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            return field != null;
+        } catch (NoSuchFieldException e) {
+            return false;
+        }
+    }
 	
 }
