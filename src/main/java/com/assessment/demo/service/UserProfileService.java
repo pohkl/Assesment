@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.assessment.demo.bean.ListUserProfileRequestBean;
 import com.assessment.demo.bean.ListUserProfileResponseBean;
 import com.assessment.demo.bean.UserProfileRequestBean;
+import com.assessment.demo.dao.UserProfileDAOImpl;
 import com.assessment.demo.entity.GenderEntity;
 import com.assessment.demo.entity.UserProfileEntity;
 import com.assessment.demo.repositories.GenderRepository;
@@ -35,12 +36,20 @@ public class UserProfileService {
 	@Autowired
 	ThirdPartyService thirdPartyService;
 	
+	@Autowired
+	UserProfileDAOImpl userProfileDAOImpl;
+	
 	public List<GenderEntity> getAllGenders() {
         return genderRepo.findAll();
     }
 
 	@Transactional
 	public UserProfileEntity addUserProfile(UserProfileRequestBean requestBean) {
+		
+//		if(isUserEmailExists(requestBean.getUserEmail())) {
+		if(userProfileRepository.existsByUserEmail(requestBean.getUserEmail())) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists.");
+		}
 		
 		UserProfileEntity e = new UserProfileEntity();
 		e.setUserFullName(requestBean.getUserFullName());
@@ -51,6 +60,15 @@ public class UserProfileService {
 		userProfileRepository.save(e);
 		
 		return e;
+	}
+
+	private boolean isUserEmailExists(String userEmail) {
+		UserProfileEntity e = userProfileDAOImpl.getUserProfileByEmail(userEmail);
+		if(e!=null&&e.getProfileId()>0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public UserProfileEntity getUserProfileById(Integer profileId) {
