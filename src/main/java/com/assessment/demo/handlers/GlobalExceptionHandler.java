@@ -1,4 +1,4 @@
-package com.assessment.demo.exception;
+package com.assessment.demo.handlers;
 
 import java.util.HashMap;
 import java.util.Map;
