@@ -93,6 +93,8 @@ public class UserProfileService {
 		
 		userProfileRepository.save(e);
 		
+		
+		// Just put this here to make it fail to test transaction rollback
 		if(!isGenderIdExists(e.getGenderId())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Gender ID.");
 		}
